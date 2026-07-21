@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praveen — DevOps Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0f14;
+    --bg-panel: #10161d;
+    --line: #1e2a35;
+    --text: #dbe4ea;
+    --muted: #7c8ea0;
+    --amber: #e3a53c;
+    --green: #3ddc84;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Inter', sans-serif;
+  }
+ 
+  *{box-sizing:border-box; margin:0; padding:0;}
+ 
+  body{
+    background:
+      radial-gradient(ellipse at top left, rgba(227,165,60,0.06), transparent 45%),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+ 
+  ::selection{ background: var(--amber); color: #14100a; }
+ 
+  a{ color: var(--amber); text-decoration: none; }
+  a:hover{ text-decoration: underline; }
+ 
+  :focus-visible{
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+ 
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+ 
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 100px 0 60px;
+    border-bottom: 1px solid var(--line);
+  }
+ 
+  .prompt{
+    font-family: var(--font-mono);
+    color: var(--green);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 18px;
+    opacity: 0.9;
+  }
+ 
+  .prompt .cursor{
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: var(--green);
+    margin-left: 4px;
+    vertical-align: -2px;
+    animation: blink 1s steps(1) infinite;
+  }
+ 
+  @keyframes blink{ 50%{ opacity: 0; } }
+ 
+  h1{
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+ 
+  .role{
+    font-family: var(--font-mono);
+    color: var(--amber);
+    font-size: 1rem;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+ 
+  .lede{
+    margin-top: 22px;
+    color: var(--text);
+    font-size: 1.02rem;
+    max-width: 60ch;
+  }
+ 
+  .lede + .lede{ margin-top: 14px; }
+ 
+  /* ---------- SECTION LABELS ---------- */
+  section{ padding: 52px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type{ border-bottom: none; }
+ 
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: lowercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+ 
+  .eyebrow::before{
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--amber);
+    border-radius: 50%;
+    display: inline-block;
+  }
+ 
+  /* ---------- STATUS / SKILLS PANEL ---------- */
+  .status-panel{
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+ 
+  .status-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    border-bottom: 1px solid var(--line);
+  }
+ 
+  .status-row:last-child{ border-bottom: none; }
+ 
+  .status-name{ color: var(--text); }
+ 
+  .status-ok{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--green);
+    font-size: 0.78rem;
+  }
+ 
+  .status-ok .dot{
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px rgba(61,220,132,0.15);
+  }
+ 
+  /* ---------- EXPERIENCE ---------- */
+  .exp-list{ list-style: none; }
+  .exp-list li{
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 12px;
+    font-size: 0.98rem;
+  }
+  .exp-list li::before{
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+ 
+  /* ---------- OUTSIDE WORK ---------- */
+  .tags{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+  }
+ 
+  .tag{
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 100px;
+    background: var(--bg-panel);
+  }
+ 
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding: 40px 0 70px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+ 
+  @media (prefers-reduced-motion: reduce){
+    .cursor{ animation: none; }
+  }
+ 
+  @media (max-width: 560px){
+    .hero{ padding: 70px 0 44px; }
+    .status-row{ flex-direction: column; align-items: flex-start; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+ 
+  <div class="wrap">
+ 
+    <header class="hero">
+      <div class="prompt">$ whoami<span class="cursor"></span></div>
+      <h1>Suriya</h1>
+      <div class="role">DevOps Engineer · ~4 years experience</div>
+      <p class="lede">Passionate about designing, automating, and managing scalable cloud infrastructure. I enjoy understanding technologies from first principles rather than just learning commands — which drives me to explore production-level implementations of Kubernetes, Terraform, AWS, GCP, CI/CD, Docker, Helm, and AI.</p>
+      <p class="lede">I believe strong fundamentals are the key to building reliable and efficient systems.</p>
+    </header>
+ 
+    <section id="stack">
+      <div class="eyebrow">core stack — status</div>
+      <div class="status-panel">
+        <div class="status-row"><span class="status-name">Kubernetes</span><span class="status-ok"><span class="dot"></span>operational</span></div>
+        <div class="status-row"><span class="status-name">Terraform</span><span class="status-ok"><span class="dot"></span>operational</span></div>
+        <div class="status-row"><span class="status-name">AWS / GCP</span><span class="status-ok"><span class="dot"></span>operational</span></div>
+        <div class="status-row"><span class="status-name">CI/CD Pipelines</span><span class="status-ok"><span class="dot"></span>operational</span></div>
+        <div class="status-row"><span class="status-name">Docker · Helm</span><span class="status-ok"><span class="dot"></span>operational</span></div>
+        <div class="status-row"><span class="status-name">AI-assisted workflows</span><span class="status-ok"><span class="dot"></span>operational</span></div>
+      </div>
+    </section>
+ 
+    <section id="work">
+      <div class="eyebrow">recent work</div>
+      <ul class="exp-list">
+        <li>Built secure infrastructure using Terraform, with reusable and auditable modules.</li>
+        <li>Designed and ran scalable Kubernetes environments for production workloads.</li>
+        <li>Set up centralized monitoring for full visibility across services.</li>
+        <li>Improved deployment processes for smoother, more reliable releases.</li>
+      </ul>
+    </section>
+ 
+    <section id="outside">
+      <div class="eyebrow">outside of work</div>
+      <p class="lede">A fitness enthusiast who values a healthy, active lifestyle. Free time goes to movies, web series, and podcasts — plus bike rides and road trips to explore new places.</p>
+      <div class="tags">
+        <span class="tag">fitness</span>
+        <span class="tag">movies &amp; web series</span>
+        <span class="tag">podcasts</span>
+        <span class="tag">bike rides</span>
+        <span class="tag">road trips</span>
+      </div>
+    </section>
+ 
+    <footer>
+      <span>build: local · pending pipeline</span>
+      <span>last deployed: —</span>
+    </footer>
+ 
+  </div>
+ 
+</body>
+</html>
