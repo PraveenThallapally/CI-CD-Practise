@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: praveen-devops-page
+  namespace: qa
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: praveen-devops-page
+  template:
+    metadata:
+      labels:
+        app: praveen-devops-page
+    spec:
+      containers:
+      - name: praveen-devops-page
+        image: praveen1351/devops-page:c701e7877218ede96d2c5717fd6d9b4e76368535
+        ports:
+        - containerPort: 80
