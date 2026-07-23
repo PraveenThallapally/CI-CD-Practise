@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: praveen-devops-page
-        image: praveen1351/devops-page:c701e7877218ede96d2c5717fd6d9b4e76368535
+        image: praveen1351/devops-page:df7cde8652a91fa15742dd9de1575baf20aba9a9
         ports:
         - containerPort: 80
