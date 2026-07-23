@@ -1,4 +1,4 @@
-name: CD - Update Dev Image Tag
+name: CD - Promote Image (dev → qa)
  
 on:
   workflow_run:
@@ -8,8 +8,58 @@ on:
  
 jobs:
   update-dev-manifest:
-    # only proceed if the CI run this was triggered by actually succeeded
     if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      image_tag: ${{ steps.vars.outputs.sha }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+ 
+      - name: Get the image tag CI just pushed
+        id: vars
+        run: echo "sha=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+ 
+      - name: Update image tag in dev manifest
+        run: |
+          sed -i "s|image: .*devops-page:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/devops-page:${{ steps.vars.outputs.sha }}|" k8s/dev/deployment.yaml
+ 
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add k8s/dev/deployment.yaml
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "chore(cd): promote dev to ${{ steps.vars.outputs.sha }}"
+          git push origin main
+ 
+  verify-dev-health:
+    needs: update-dev-manifest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x argocd
+          sudo mv argocd /usr/local/bin/
+ 
+      - name: Log in to ArgoCD
+        run: |
+          argocd login ${{ secrets.ARGOCD_SERVER }} \
+            --username ${{ secrets.ARGOCD_USERNAME }} \
+            --password ${{ secrets.ARGOCD_PASSWORD }} \
+            --insecure
+ 
+      - name: Wait for dev app to be Synced and Healthy
+        run: |
+          argocd app wait devops-page-dev --health --sync --timeout 180
+ 
+  update-qa-manifest:
+    needs: verify-dev-health
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,20 +69,18 @@ jobs:
         with:
           ref: main
  
-      - name: Get the image tag (commit SHA) that CI just pushed
-        id: vars
-        run: echo "sha=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+      - name: Pull latest (in case dev job just pushed)
+        run: git pull origin main
  
-      - name: Update image tag in dev manifest
+      - name: Update image tag in qa manifest
         run: |
-          sed -i "s|image: .*devops-page:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/devops-page:${{ steps.vars.outputs.sha }}|" k8s/dev/deployment.yaml
-          cat k8s/dev/deployment.yaml
+          sed -i "s|image: .*devops-page:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/devops-page:${{ needs.update-dev-manifest.outputs.image_tag }}|" k8s/qa/deployment.yaml
  
-      - name: Commit and push the updated manifest
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add k8s/dev/deployment.yaml
-          git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "chore(cd): update dev image to ${{ steps.vars.outputs.sha }}"
+          git add k8s/qa/deployment.yaml
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "chore(cd): promote qa to ${{ needs.update-dev-manifest.outputs.image_tag }}"
           git push origin main
